@@ -4,7 +4,7 @@
 
 Type a question, choose a provider and model, and read the answer below. Run models through Ollama on your own computer, or connect another compatible API.
 
-[Getting started](#getting-started-on-macos) · [How to use](#how-to-use) · [Configuration](#configuration) · [Troubleshooting](#troubleshooting) · [License](#license)
+[Assisted setup](#assisted-macos-setup) · [Getting started](#getting-started-on-macos) · [How to use](#how-to-use) · [Configuration](#configuration) · [Troubleshooting](#troubleshooting) · [License](#license)
 
 ## Screenshot
 
@@ -55,6 +55,52 @@ Ollama manages the model downloads and inference. Yug provides the interface, co
 For Qwen3.5 35B, plan for an approximately **22 GB model download**, additional runtime memory, and at least **35–40 GB of free disk space** as practical headroom. An Apple Silicon Mac with 48 GB unified memory is a reasonable starting point for this quantized model with the app's 8K context. Actual performance depends on available memory and workload.
 
 No pip packages, Node.js, Docker, Brave integration, or paid API subscription are required for the local setup.
+
+## Assisted macOS setup
+
+Run the following commands from the extracted project folder containing `setup-mac.sh`. Download the complete project: the installer also requires `scripts/select_qwen.py`.
+
+**Before running:** check `python3 --version`. Python 3.10 or newer must be selected in the same Terminal session. A Mac may have a newer Python installed while its default `python3` still points to Apple's Python 3.9; correct your PATH or install a current Python from [python.org](https://www.python.org/downloads/macos/).
+
+The included Bash script checks macOS 14+, Apple Silicon, Python 3.10+, at least 8 GiB RAM, and model-volume disk space. Preview without installing:
+
+```bash
+bash setup-mac.sh --check-only
+```
+
+Install/update the latest stable official Ollama Mac app and download a fitting Qwen model:
+
+```bash
+bash setup-mac.sh
+```
+
+To explicitly request the model used in the original guide:
+
+```bash
+bash setup-mac.sh --model qwen3.5:35b
+```
+
+The script discovers numeric, stable general-purpose Qwen families from Ollama's live catalog, newest first. It excludes specialized and preview families, considers local numeric size tags, and chooses the largest download fitting a heuristic budget: weights no larger than 60% of RAM, with 10 GiB extra disk space. This is not a guarantee of runtime performance. If no model in the newest family fits, it considers older families. Catalog discovery depends on website structure and fails visibly if discovery breaks; an explicit model bypasses catalog discovery.
+
+Before installation it asks for confirmation. `--yes` skips that download confirmation, but macOS and running-app prompts may still require interaction. The latest stable app release comes from Ollama's official GitHub repository and must pass macOS signature and Gatekeeper checks. The app is installed in `~/Applications`; an existing per-user app is backed up. A separate `/Applications/Ollama.app` is not replaced. Quit running Ollama before updating, and complete first-run prompts when needed. No sudo, shell-profile edits, security bypasses, or Python installation are performed. Keep Ollama's model location consistent with `OLLAMA_MODELS` when using a custom volume.
+
+If Python is rejected despite a newer version being installed, run `which python3` and `python3 --version` in the same Terminal; ensure that installation is first in PATH. The Bash script requires the accompanying `scripts/select_qwen.py`; download the whole project rather than just one file.
+
+### After assisted setup
+
+Start the framework:
+
+```bash
+python3 server.py
+```
+
+Open [http://127.0.0.1:8787](http://127.0.0.1:8787), refresh the model list, select the downloaded Qwen model, and enter your question. The setup script does not start Yug automatically.
+
+### Setup verification status
+
+Check-only mode was verified on an Apple M4 Pro Mac with 48 GiB memory on October 16, 2026, using Python 3.13. It selected `qwen3.8:27b`, with an approximately 16.5 GiB download budget. Selection may change as Ollama's live catalog changes. Parser and model-selection checks covered release ordering, memory fallback, disk limits, and cloud-tag rejection. Bash syntax validation passed.
+
+No Ollama installation or model-weight download was performed during this verification. The full installer path remains untested. The machine's default Terminal Python 3.9 was correctly rejected before rerunning check-only mode with Python 3.13 selected.
 
 ## Getting started on macOS
 
