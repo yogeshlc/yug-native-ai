@@ -6,6 +6,12 @@ Type a question, choose a provider and model, and read the answer below. Run mod
 
 [Getting started](#getting-started-on-macos) · [How to use](#how-to-use) · [Configuration](#configuration) · [Troubleshooting](#troubleshooting) · [License](#license)
 
+## Screenshot
+
+![Yug Native AI Framework workspace with question box, model selection, and answer area](docs/images/yug-native-ai-workspace.png)
+
+*Workspace preview before connecting Ollama. The screenshot shows the provider offline; start Ollama and select a downloaded model to generate answers.*
+
 ## Features
 
 - Simple query box, provider/model dropdowns, and answer area.
@@ -19,6 +25,8 @@ Type a question, choose a provider and model, and read the answer below. Run mod
 - Responsive interface with no external fonts, scripts, or frontend dependencies.
 
 ## How it works
+
+See [the complete application flow and architecture diagrams](ARCHITECTURE.md) for startup, requests, provider routing, and storage details.
 
 ```mermaid
 flowchart LR
